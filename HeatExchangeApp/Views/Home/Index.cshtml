@@ -1,0 +1,101 @@
+﻿@model List<HeatExchangeApp.Models.SavedCalculation>
+
+@{
+    ViewData["Title"] = "Главная страница";
+}
+
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1>Расчет теплообмена в противоточном слое</h1>
+            <p class="lead">Веб-приложение для расчета теплообмена в противоточном движении кусковых материалов и газов</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="@Url.Action("Calculator", "Home")" class="btn btn-primary btn-lg">
+                <i class="bi bi-calculator"></i> Новый расчет
+            </a>
+        </div>
+    </div>
+
+    @if (Model.Any())
+    {
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Сохраненные расчеты</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Название</th>
+                                <th>Дата создания</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var calc in Model)
+                            {
+                                <tr>
+                                    <td>@calc.Name</td>
+                                    <td>@calc.CreatedAt.ToString("dd.MM.yyyy HH:mm")</td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a href="@Url.Action("Calculator", "Home", new { id = calc.Id })" 
+                                               class="btn btn-sm btn-outline-primary">
+                                                <i class="bi bi-eye"></i> Открыть
+                                            </a>
+                                            <form method="post" action="@Url.Action("DeleteCalculation", "Home")" 
+                                                  onsubmit="return confirm('Удалить этот расчет?');" style="display: inline;">
+                                                <input type="hidden" name="id" value="@calc.Id" />
+                                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                    <i class="bi bi-trash"></i> Удалить
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            <h5><i class="bi bi-info-circle"></i> Нет сохраненных расчетов</h5>
+            <p>Создайте свой первый расчет, нажав кнопку "Новый расчет"</p>
+        </div>
+    }
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">О программе</h5>
+                    <p class="card-text">
+                        Приложение предназначено для расчета теплообмена в противоточном движении кусковых материалов 
+                        и газов в плотном продуваемом слое. Реализованы все формулы из первой практической работы.
+                    </p>
+                    <p class="card-text">
+                        <strong>Технологии:</strong> ASP.NET Core MVC, Entity Framework Core, SQLite, Chart.js, Bootstrap 5
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Подключение иконок Bootstrap Icons
+        document.addEventListener('DOMContentLoaded', function() {
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css';
+            document.head.appendChild(link);
+        });
+    </script>
+}
